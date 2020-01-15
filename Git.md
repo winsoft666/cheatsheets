@@ -153,9 +153,7 @@ git push origin master			#以后每次将本地仓库推送至远程仓库（每
 ```bash
 git branch <branch name>	#创建<branch name>分支
 git checkout <branch name>	#切换至<branch name>分支
-git switch <branch name>	#切换至<branch name>分支
 git checkout -b <branch name>	#创建并切换至<branch name>分支
-git switch -c <branch name>	    #创建并切换至<branch name>分支
 git branch			#查看本地已有分支（* 表示当前分支）
 git branch -all	    #查看所有已有分支（包含线上分支）（* 表示当前分支）
 git merge <branch name>		#合并<branch name>到当前分支（通常在master分支下操作）
