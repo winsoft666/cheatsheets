@@ -9,7 +9,7 @@
 git config --global "Your Name"
 git config --global "Email Address"
 git config --global log.date format: %Y-%m-%d %H:%M:%S
-git config --global core.editor vim
+git config --global core.editor "notepad.exe"
 git config --list
 ```
 
