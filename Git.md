@@ -1,7 +1,7 @@
 # 配置文件
 ```bash
-.git/config			#当前工作区的配置文件
-~/.gitconfig		#当前用户的配置文件
+.git/config   #当前工作区的配置文件
+~/.gitconfig  #当前用户的配置文件
 ```
 
 # 配置
@@ -10,6 +10,11 @@ git config --global "Your Name"
 git config --global "Email Address"
 git config --global log.date format: %Y-%m-%d %H:%M:%S
 git config --global core.editor "notepad.exe"
+git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080     #设置HTTP代理
+git config --global http.proxy socks5://proxyuser:proxypwd@proxy.server.com:8080   #设置Socks5代理
+git config --global --unset http.proxy  #移除HTTP代理设置
+git config --global --get http.proxy    #查看HTTP代理设置
+git config [--global] alias.<alias> '<original command>'  #为所有工作区/当前工作区配置别名
 git config --list
 ```
 
@@ -21,31 +26,37 @@ git init
 # 克隆远程仓库
 ```bash
 git clone <remote address>
+git clone --depth=1 <remote address>  #克隆最新一次提交
 ```
 
 # 文件添加
 ```bash
 git add <file>
-git add -f <file>		#强制添加，尽管在.gitignore文件中已被忽略
-git add -u   #添加工作目录中所有已track的文件至staging area，不包括新增的文件
-git add .    #添加被修改和新增的文件，但不包括被删除的文件
+git add -f <file>       #强制添加，尽管在.gitignore文件中已被忽略
+git add -u              #添加工作目录中所有已track的文件至staging area，不包括新增的文件
+git add .               #添加被修改和新增的文件，但不包括被删除的文件
+git add --all <dir>     #递归添加整个目录
 ```
 
 # 提交
 ```bash
-git commit -m "descriptions"
-git commit --amend        #对最近一次的提交做内容修改
+git commit -m "descriptions"   #提交，并附带提交描述
+git commit --amend             #对最近一次的提交做内容修改
 git commit --amend --author "user_name <user_email>"  #修改最近提交用户名和邮箱
 ```
 
 # 状态
 ```bash
 git status
-git status -s   #文件状态缩略信息, 常见 A:新增; M:文件变更; ?:未track; D:删除
-git diff <file>
-git diff HEAD -- <file>		#查看工作区和版本库里面最新版本的区别
+git status -s               #文件状态缩略信息, 常见 A:新增; M:文件变更; ?:未track; D:删除
+git diff <file>             #不加参数即默认比较工作区与暂存区
+git diff HEAD -- <file>     #查看工作区和版本库里面最新版本的区别
 git diff --check <file>     #检查是否有空白错误(regex:' \{1,\}$')
 git diff --cached <file>    #查看已add的内容(绿M)
+git diff HEAD [<path>...]   #比较工作区与最新本地版本库
+git diff commit-id [<path>...]  #比较工作区与指定commit-id的差异　　　　　　
+git diff --cached [<commit-id>] [<path>...]   #比较暂存区与指定commit-id的差异
+git diff [<commit-id>] [<commit-id>]          #比较两个commit-id之间的差异
 ```
 
 # 查看历史版本、历史操作
@@ -116,17 +127,16 @@ git reset --hard id		    #回退到指定版本
 
 # 撤销修改
 ```bash
-git checkout -- <file>		#撤销修改：误修改工作区文件，未git add/commit
-git restore <file>		    #撤销修改：误修改工作区文件，未git add/commit
-git reset HEAD <file>		#撤销git add：误将文件加入暂存区（git add），未git commit
-git reset --hard HEAD^		#撤销git commit：误将文件提交（一旦提交，只能通过版本回退进行撤销）
+git checkout -- <file>    #撤销修改：误修改工作区文件，未git add/commit
+git reset HEAD <file>     #撤销git add：误将文件加入暂存区（git add），未git commit
+git reset --hard HEAD^    #撤销git commit：误将文件提交（一旦提交，只能通过版本回退进行撤销）
 ```
 
 # 删除与恢复
 ```bash
 git rm/add <file>
-git commit -m "remove <file>"	删除版本库中的<file>：删除工作区文件后，继续删除版本库中相应的文件
-git checkout -- <file>		根据版本库中的<file>恢复工作区<file>
+git commit -m "remove <file>"     删除版本库中的<file>：删除工作区文件后，继续删除版本库中相应的文件
+git checkout -- <file>            根据版本库中的<file>恢复工作区<file>
 ```
 
 # 清理工作区
@@ -140,26 +150,23 @@ git clean -df   #清理所有未track文件和文件夹, 使用前确保新增�
 
 # 关联GitHub远程仓库（本地到远程）
 ```bash
-git remote add origin <remote address>	#在本地工作区目录下按照 GitHub 提示进行关联
-git remote rm origin			#解除错误关联
-git push -u origin master		#第一次将本地仓库推送至远程仓库（每次在本地提交后进行操作）
-git push origin master			#以后每次将本地仓库推送至远程仓库（每次在本地提交后进行操作）
-<remote address>:
-	git@github.com:<username>/<repository>.git
-	https://github.com/<username>/<repository>.git
+git remote add origin <remote address>      #在本地工作区目录下按照 GitHub 提示进行关联
+git remote rm origin           #解除错误关联
+git push -u origin master      #第一次将本地仓库推送至远程仓库（每次在本地提交后进行操作）
+git push origin master         #以后每次将本地仓库推送至远程仓库（每次在本地提交后进行操作）
 ```
 
 # 分支管理
 ```bash
-git branch <branch name>	#创建<branch name>分支
-git checkout <branch name>	#切换至<branch name>分支
-git checkout -b <branch name>	#创建并切换至<branch name>分支
-git branch			#查看本地已有分支（* 表示当前分支）
-git branch -all	    #查看所有已有分支（包含线上分支）（* 表示当前分支）
-git merge <branch name>		#合并<branch name>到当前分支（通常在master分支下操作）
-git branch -d <branch name>	#删除分支
-git branch -D <branch name>	#强制删除分支（丢弃未合并分支）
-git merge --no-ff -m "descriptions" <branch name>     #合并后删除分支也在 log 中保留分支记录
+git branch <branch name>          #创建<branch name>分支
+git checkout <branch name>        #切换至<branch name>分支
+git checkout -b <branch name>     #创建并切换至<branch name>分支
+git branch                        #查看本地已有分支（* 表示当前分支）
+git branch -all                   #查看所有已有分支（包含线上分支）（* 表示当前分支）
+git merge <branch name>           #合并<branch name>到当前分支
+git branch -d <branch name>       #删除分支
+git branch -D <branch name>       #强制删除分支（丢弃未合并分支）
+git merge --no-ff -m "descriptions" <branch name>     #合并后删除分支也在log中保留分支记录
 ```
 
 # Bug分支管理（建立单独分支进行bug修复）
@@ -195,21 +202,21 @@ git commit/push					#重新提交并推送
 
 # 标签管理（常用于版本管理）：查看、创建、操作
 ```bash
-git tag								#查看标签
-git show <tag name>					#查看指定标签
-git tag <tag name>					#为上次commit位置打标签
-git tag <tag name> <commit id>		#为指定commit位置打标签
-git tag -a <tag name> -m "descriptions" <commit id>		#为指定commit打标并添加描述
-git tag -d <tag name>						#删除本地标签
-git push origin <tag name>					#推送指定标签到远程
-git push origin --tags						#推送所有本地标签到远程
-git push origin :refs/tags/<tag name>		#删除远程标签（先删除本地标签）
+git tag                     #查看标签
+git show <tag name>         #查看指定标签
+git tag <tag name>          #为上次commit位置打标签
+git tag <tag name> <commit id>  #为指定commit位置打标签
+git tag -a <tag name> -m "descriptions" <commit id>     #为指定commit打标并添加描述
+git tag -d <tag name>               #删除本地标签
+git push origin <tag name>          #推送指定标签到远程
+git push origin --tags              #推送所有本地标签到远程
+git push origin :refs/tags/<tag name>     #删除远程标签（先删除本地标签）
 ```
 
 # 生成diff patch补丁文件
 ```bash
-git <branch> log -n -p > diff.patch # 生成某分支过去n个commit的文件diff信息至单个diff文件
-git diff <--cached> diff.patch # 针对当前缓存区的内容生成diff文件
+git <branch> log -n -p > diff.patch     #生成某分支过去n个commit的文件diff信息至单个diff文件
+git diff <--cached> diff.patch    #针对当前缓存区的内容生成diff文件
 ```
 
 # 打patch补丁
@@ -222,8 +229,8 @@ git apply diff.patch            #打patch, 仅仅改变文件信息, 无commit�
 # 利用--format-patch生成patch, 带commit信息
 ```bash
 git format-patch HEAD^ 　       #生成最近的1次commit的patch
-git format-patch HEAD^^　　　　　#生成最近的2次commit的patch
-git format-patch HEAD^^^ 　　　　#生成最近的3次commit的patch
+git format-patch HEAD^^         #生成最近的2次commit的patch
+git format-patch HEAD^^^        #生成最近的3次commit的patch
 git format-patch <branch> -n 　 #生成分支<branch>最近的n次commit的patch
 git format-patch <r1>..<r2>     #生成两个commit间的修改的patch（包含两个commit. <r1>和<r2>都是具体的commit号)
 git format-patch -1 <r1>        #生成单个commit的patch
@@ -267,13 +274,8 @@ git bundle create awesome-cheatsheets.bundle master ^origin/master
 
 # .gitignore配置文件
 ```bash
-/<dir name>/		#忽略文件夹
-*.zip				#忽略.zip文件
-/<dir name>/<file name>		#忽略指定文件
-git check-ignore -v <file>	#查看生效规则
-```
-
-# 配置别名
-```bash
-git config [--global] alias.<alias> '<original command>'	#为所有工作区/当前工作区配置别名
+/<dir name>/      #忽略文件夹
+*.zip             #忽略.zip文件
+/<dir name>/<file name>     #忽略指定文件
+git check-ignore -v <file>  #查看生效规则
 ```
