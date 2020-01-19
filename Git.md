@@ -9,7 +9,7 @@
 git config --global "Your Name"
 git config --global "Email Address"
 git config --global log.date format: %Y-%m-%d %H:%M:%S
-git config --global core.editor "notepad.exe"
+git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin"
 git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080     #设置HTTP代理
 git config --global http.proxy socks5://proxyuser:proxypwd@proxy.server.com:8080   #设置Socks5代理
 git config --global --unset http.proxy  #移除HTTP代理设置
