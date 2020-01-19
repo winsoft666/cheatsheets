@@ -164,7 +164,7 @@ SpaceBeforeAssignmentOperators:	true
 SpaceBeforeParens:	ControlStatements
 # 在空的圆括号中添加空格
 SpaceInEmptyParentheses:	false
-# 在尾随的评论前添加的空格数(只适用于//)
+# 在尾随的注释前添加的空格数(只适用于//)
 SpacesBeforeTrailingComments:	2
 # 在尖括号的<后和>前添加空格
 SpacesInAngles:	true

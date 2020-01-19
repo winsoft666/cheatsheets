@@ -23,18 +23,19 @@ git config --list
 git init
 ```
 
-# 克隆远程仓库
+# 克隆
 ```bash
 git clone <remote address>
 git clone --depth=1 <remote address>  #克隆最新一次提交
 ```
 
-# 文件添加
+# 暂存区
 ```bash
 git add <file>
 git add -f <file>       #强制添加，尽管在.gitignore文件中已被忽略
-git add -u              #添加工作目录中所有已track的文件至staging area，不包括新增的文件
-git add .               #添加被修改和新增的文件，但不包括被删除的文件
+git add -u              #添加：已被Track且被修改的文件
+git add -A              #添加所有文件，包含删除文件、新增文件、修改文件
+git add .               #添加：已被Track且被修改的文件、新增文件，但不包括被删除的文件
 git add --all <dir>     #递归添加整个目录
 ```
 
@@ -47,15 +48,14 @@ git commit --amend --author "user_name <user_email>"  #修改最近提交用户�
 
 # 状态
 ```bash
-git status
-git status -s               #文件状态缩略信息, 常见 A:新增; M:文件变更; ?:未track; D:删除
-git diff <file>             #不加参数即默认比较工作区与暂存区
-git diff HEAD -- <file>     #查看工作区和版本库里面最新版本的区别
+git status                  #显示文件状态
+git status -s               #已精简的方式显示文件状态, A:新增; M:文件变更; ?:未track; D:删除
+git diff <file>             #查看工作区与暂存区中的文件差异
+git diff HEAD -- <file>     #查看工作区和仓库中的文件差异
+git diff --cached <file>    #查看暂存区和仓库中的文件差异
 git diff --check <file>     #检查是否有空白错误(regex:' \{1,\}$')
-git diff --cached <file>    #查看已add的内容(绿M)
-git diff HEAD [<path>...]   #比较工作区与最新本地版本库
-git diff commit-id [<path>...]  #比较工作区与指定commit-id的差异　　　　　　
-git diff --cached [<commit-id>] [<path>...]   #比较暂存区与指定commit-id的差异
+git diff commit-id [<file>...]  #比较工作区与指定commit-id的差异　　　　　　
+git diff --cached [<commit-id>] [<file>...]   #比较暂存区与指定commit-id的差异
 git diff [<commit-id>] [<commit-id>]          #比较两个commit-id之间的差异
 ```
 
@@ -74,30 +74,11 @@ git log -p -W               #历次commit的内容增删, 同时显示变更内�
 git log origin/EI-1024 -1 --stat -p -W  #查看远端分支EI-1024前一次修改的详细内容
 git log origin/master..dev --stat -p -W #查看本地dev分支比远端master分支变化(修改)的详细内容
 git log --pretty=oneline --abbrev-commit --decorate=full	#在log中显示标签
-
 git log <branch_name> --oneline   #对提交历史单行排列
 git log <branch_name> --graph     #对提交历史图形化排列
 git log <branch_name> --decorate  #对提交历史关联相关引用, 如tag, 本地远程分支等
 git log <branch_name> --oneline --graph --decorate #树形化显示历史
 git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen%ai(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit #同上, 建议alais保存
-
-git log --pretty=format 常用的选项(摘自progit_v2.1.9)
-%H 提交对象（commit）的完整哈希字串
-%h 提交对象的简短哈希字串
-%T 树对象（tree）的完整哈希字串
-%t 树对象的简短哈希字串
-%P 父对象（parent）的完整哈希字串
-%p 父对象的简短哈希字串
-%an 作者（author）的名字
-%ae 作者的电子邮件地址
-%ad 作者修订日期（可以用 --date= 选项定制格式）
-%ar 作者修订日期，按多久以前的方式显示
-%cn 提交者（committer）的名字
-%ce 提交者的电子邮件地址
-%cd 提交日期
-%cr 提交日期，按多久以前的方式显示
-%s 提交说明
-
 git log --since 或 --after    #显示时间之后的提交
 git log --until 或 --before   #显示时间之前的提交
 git --author                  #显示指定作者的提交
@@ -114,8 +95,11 @@ git log --since="1 weeks 2 days 3 hours 40 minutes 50 seconds ago" #过去1周2�
 git show                         #查看最新的commit
 git show <commitId>              #查看指定commit hashID的所有修改
 git show <commitId> <fileName>   #查看某次commit中具体某个文件的修改
+git show <commitId>:<fileName>   #查看某次commit中具体某个文件的内容
+git show <commitId>:<fileName> > <new_fileName>   #将某次commit中具体某个文件的内容导出到新文件中
 git cherry -v                    #查看已经提交但是未传送到远程代码库的提交描述/说明
 git log master ^origin/master    #查看已经提交但是未传送到远程代码库的详情
+git diff <commit-id>^!             #查看指定commit-id的修改
 ```
 
 # 版本回退、前进
@@ -134,9 +118,10 @@ git reset --hard HEAD^    #撤销git commit：误将文件提交（一旦提交�
 
 # 删除与恢复
 ```bash
-git rm/add <file>
-git commit -m "remove <file>"     删除版本库中的<file>：删除工作区文件后，继续删除版本库中相应的文件
-git checkout -- <file>            根据版本库中的<file>恢复工作区<file>
+git rm <file>                     #删除工作区的文件，并提交删除操作到暂存区
+git rm --cached <file>            #删除暂存区的文件，但不影响工作区
+git checkout -- <file>            #用暂存区中的文件替换工作区的文件
+git checkout HEAD -- <file>       #用仓库中的文件替换工作区的文件
 ```
 
 # 清理工作区
@@ -146,14 +131,6 @@ git clean -n    #查看清理文件列表(不包括文件夹), 不执行实际�
 git clean -n -d #查看清理文件列表(包括文件夹), 不执行实际清理动作
 git clean -f    #清理所有未track文件
 git clean -df   #清理所有未track文件和文件夹, 使用前确保新增加的文件或文件夹已add, 否则新创建的文件或者文件夹也会被强制删除
-```
-
-# 关联GitHub远程仓库（本地到远程）
-```bash
-git remote add origin <remote address>      #在本地工作区目录下按照 GitHub 提示进行关联
-git remote rm origin           #解除错误关联
-git push -u origin master      #第一次将本地仓库推送至远程仓库（每次在本地提交后进行操作）
-git push origin master         #以后每次将本地仓库推送至远程仓库（每次在本地提交后进行操作）
 ```
 
 # 分支管理
@@ -167,6 +144,14 @@ git merge <branch name>           #合并<branch name>到当前分支
 git branch -d <branch name>       #删除分支
 git branch -D <branch name>       #强制删除分支（丢弃未合并分支）
 git merge --no-ff -m "descriptions" <branch name>     #合并后删除分支也在log中保留分支记录
+```
+
+# 关联GitHub远程仓库（本地到远程）
+```bash
+git remote add origin <remote address>      #在本地工作区目录下按照 GitHub 提示进行关联
+git remote rm origin           #解除错误关联
+git push -u origin master      #第一次将本地仓库推送至远程仓库（每次在本地提交后进行操作）
+git push origin master         #以后每次将本地仓库推送至远程仓库（每次在本地提交后进行操作）
 ```
 
 # Bug分支管理（建立单独分支进行bug修复）
