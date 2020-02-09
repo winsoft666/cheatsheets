@@ -29,6 +29,10 @@ CTRL+B        转到定义
 CTRL+ALT+left/right 返回至上次浏览的位置
 ALT+left/right      TAB页切换
 CTRL+H        显示类结构
+CTRL+F12      显示当前文档的结构
+CTRL+P        显示参数信息
+CTRL+W        选择单词->语句->函数
+CTRL+N        快速转到当前文件中的类定义
 
 CTRL+F        在当前文件查找
 CTRL+R        在当前文件替换
@@ -36,6 +40,7 @@ CTRL+SHIFT+F  在文件中查找
 CTRL+SHIFT+R  在文件中替换
 
 SHIFT+F9      开始调试
+F9            程序断点停住后，继续执行
 CTRL+F2       停止调试
 F8       逐过程单步调试
 F7       逐语句单步调试
