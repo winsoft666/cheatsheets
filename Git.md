@@ -144,6 +144,7 @@ git merge <branch name>           #合并<branch name>到当前分支
 git branch -d <branch name>       #删除分支
 git branch -D <branch name>       #强制删除分支（丢弃未合并分支）
 git merge --no-ff -m "descriptions" <branch name>     #合并后删除分支也在log中保留分支记录
+git push origin test:master -f    #将test分支强制（-f）推送到主分支master
 ```
 
 # 关联GitHub远程仓库（本地到远程）
